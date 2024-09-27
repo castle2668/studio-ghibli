@@ -1,7 +1,9 @@
 import React from "react";
 
-const Index = () => (
-  <p id="zero-state">
+import * as Style from "./style";
+
+const HomePage = () => (
+  <Style.ZeroState>
     This is a fans project for Studio Ghibli.
     <br />
     Check out
@@ -10,7 +12,7 @@ const Index = () => (
       the repo at github.com
     </a>
     .
-  </p>
+  </Style.ZeroState>
 );
 
-export default Index;
+export default HomePage;

@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 
 module.exports = {
   context: path.resolve(__dirname, "./src"), // 當前路徑 + 相對路徑 = 絕對路徑
@@ -26,23 +25,8 @@ module.exports = {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.html$/i,
-      //   // use: [
-      //   //   {
-      //   //     loader: "file-loader",
-      //   //     options: {
-      //   //       name: "[path][name].[ext]", // [路徑][檔名].[副檔名]
-      //   //     },
-      //   //   },
-      //   // ],
-      //   type: "asset/resource",
-      //   generator: {
-      //     filename: "[path][name][ext][query]", // 輸出 HTML
-      //   },
-      // },
       {
-        test: /\.(png|jpe?g|gif|mp4|ogg|svg|woff|woff2|ttf|eot)$/i,
+        test: /\.(png|jpe?g|gif|mp4|ogg|svg|webp|woff|woff2|ttf|eot)$/i,
         type: "asset", // Webpack 5 不需要 url-loader
       },
       {
@@ -66,57 +50,17 @@ module.exports = {
       },
     ],
   },
-  // (Plugins 就是拿來解決 Loaders 做不到的事情)
+  // 解決 Loaders 做不到的事情
   plugins: [
     new HtmlWebpackPlugin({
       title: "Studio Ghibli",
+      favicon: "./favicon.ico",
       filename: "index.html",
       template: "./index.html",
       chunks: ["vendor", "index"], // JS 不用手動加在 HTML
     }),
   ],
   optimization: {
-    minimize: true,
-    minimizer: [
-      new ImageMinimizerPlugin({
-        deleteOriginalAssets: true,
-        minimizer: {
-          implementation: ImageMinimizerPlugin.imageminMinify,
-          options: {
-            // Lossless optimization with custom option
-            // Feel free to experiment with options for better result for you
-            plugins: [
-              "gifsicle",
-              "jpegtran",
-              ["optipng", { optimizationLevel: 5 }],
-              // Svgo configuration here https://github.com/svg/svgo#configuration
-              [
-                "svgo",
-                {
-                  plugins: [
-                    {
-                      name: "preset-default",
-                      params: {
-                        overrides: {
-                          removeViewBox: false,
-                          addAttributesToSVGElement: {
-                            params: {
-                              attributes: [
-                                { xmlns: "http://www.w3.org/2000/svg" },
-                              ],
-                            },
-                          },
-                        },
-                      },
-                    },
-                  ],
-                },
-              ],
-            ],
-          },
-        },
-      }),
-    ],
     splitChunks: {
       // 把 node_modules 與自己的 entry 拆開來
       cacheGroups: {
